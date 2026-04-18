@@ -94,22 +94,32 @@ const FacultyModule = (() => {
           delete data.id;
           
           // 1. Create faculty record in Firestore
-          const facultyRec = await Store.createItem('faculty', data);
-          
-          // 2. Create Firebase Auth user
-          await Auth.adminCreateAccount(data.email, password, {
-            name: data.name,
-            role: 'faculty',
-            linkedId: facultyRec.id
-          });
-          
-          Utils.showToast('Faculty created successfully', 'success');
+          let facultyRec;
+          try {
+            facultyRec = await Store.createItem('faculty', data);
+            
+            // 2. Create Firebase Auth user
+            await Auth.adminCreateAccount(data.email, password, {
+              name: data.name,
+              role: 'faculty',
+              linkedId: facultyRec.id
+            });
+            
+            Utils.showToast('Faculty created successfully', 'success');
+          } catch (createErr) {
+            // Rollback if Auth fails
+            if (facultyRec && facultyRec.id) {
+              await Store.deleteItem('faculty', facultyRec.id);
+            }
+            throw createErr;
+          }
         }
         Utils.closeModal('facultyModal');
         Utils.clearForm('facultyForm');
         renderTable();
       } catch (err) {
-        Utils.showToast('Error saving faculty', 'error');
+        console.error(err);
+        Utils.showToast(err.message || 'Error saving faculty', 'error');
       } finally {
         document.querySelector('#facultyForm button[type="submit"]').disabled = false;
       }

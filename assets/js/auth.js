@@ -57,17 +57,30 @@ const Auth = (() => {
 
   /** Admin creates an account for a student/faculty */
   async function adminCreateAccount(email, password, profileData) {
-    // Save current admin user
-    const adminUser = auth.currentUser;
-    // Create the new account
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
-    const newUid = cred.user.uid;
-    const profile = { uid: newUid, email, ...profileData, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
-    await db.collection('users').doc(newUid).set(profile);
-    // Sign out new user and sign back in as admin — admin session is lost
-    // Note: In production, use Firebase Admin SDK. For client-side, we re-auth the admin.
-    await auth.signOut();
-    return { id: newUid, ...profile };
+    // We must use a secondary Firebase app instance to create a user.
+    // Otherwise, the client SDK automatically signs in the new user, logging out the Admin.
+    let secondaryApp;
+    try {
+      secondaryApp = firebase.app("SecondaryApp");
+    } catch (e) {
+      secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryApp");
+    }
+    
+    try {
+      const cred = await secondaryApp.auth().createUserWithEmailAndPassword(email, password);
+      const newUid = cred.user.uid;
+      const profile = { uid: newUid, email, ...profileData, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+      
+      // Use the primary db connection to save the profile
+      await db.collection('users').doc(newUid).set(profile);
+      
+      // Sign out of the secondary app
+      await secondaryApp.auth().signOut();
+      return { id: newUid, ...profile };
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
   }
 
   /** Logout */

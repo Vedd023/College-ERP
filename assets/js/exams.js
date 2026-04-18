@@ -11,7 +11,7 @@ const ExamsModule = (() => {
     await renderTable();
     setupSearch();
     setupForm();
-    if (user.role !== 'admin') {
+    if (user.role !== 'admin' && user.role !== 'faculty') {
       document.getElementById('examActions').classList.add('hidden');
     }
   }
@@ -25,7 +25,7 @@ const ExamsModule = (() => {
 
   async function renderTable() {
     let exams = await Store.getItems('exams');
-    const isAdmin = currentUser.role === 'admin';
+    const canEdit = currentUser.role === 'admin' || currentUser.role === 'faculty';
 
     // Sort by date
     exams.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -40,7 +40,7 @@ const ExamsModule = (() => {
         <td>${e.time}</td>
         <td>${e.room || '—'}</td>
         <td>${e.semester}</td>
-        <td>${isAdmin ? `
+        <td>${canEdit ? `
           <button class="btn-icon btn-sm" onclick="ExamsModule.openEditModal('${e.id}')" title="Edit">✏️</button>
           <button class="btn-icon btn-sm" onclick="ExamsModule.deleteExam('${e.id}')" title="Delete">🗑️</button>
         ` : '—'}</td>
@@ -55,11 +55,11 @@ const ExamsModule = (() => {
       const exams = allExams.filter(e => (e.subjectCode + e.examType + e.room).toLowerCase().includes(q));
       exams.sort((a, b) => new Date(a.date) - new Date(b.date));
       const tbody = document.getElementById('examsTableBody');
-      const isAdmin = currentUser.role === 'admin';
+      const canEdit = currentUser.role === 'admin' || currentUser.role === 'faculty';
       tbody.innerHTML = exams.map(e => {
         const isPast = new Date(e.date) < new Date();
         return `<tr style="${isPast ? 'opacity:0.5' : ''}"><td><span class="badge badge-neutral">${e.subjectCode}</span></td><td>${e.examType}</td><td>${Utils.formatDate(e.date)}</td><td>${e.time}</td><td>${e.room || '—'}</td><td>${e.semester}</td>
-        <td>${isAdmin ? `<button class="btn-icon btn-sm" onclick="ExamsModule.openEditModal('${e.id}')">✏️</button><button class="btn-icon btn-sm" onclick="ExamsModule.deleteExam('${e.id}')">🗑️</button>` : '—'}</td></tr>`;
+        <td>${canEdit ? `<button class="btn-icon btn-sm" onclick="ExamsModule.openEditModal('${e.id}')">✏️</button><button class="btn-icon btn-sm" onclick="ExamsModule.deleteExam('${e.id}')">🗑️</button>` : '—'}</td></tr>`;
       }).join('') || '<tr><td colspan="7" class="text-center">No exams found</td></tr>';
     }));
   }
