@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,32 @@
         <div class="topbar-left"><button class="hamburger" id="hamburger">â˜°</button><h1>Fee Management</h1></div>
         <div class="topbar-right"></div>
       </header>
-      <main class="page-content" id="feesContent"></main>
+      <main class="page-content" id="feesContent">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input type="text" class="search-input" id="searchFees" placeholder="Search by student name or ID...">
+          </div>
+          <div class="toolbar-right hidden" id="feeActions">
+            <button class="btn btn-secondary btn-sm" onclick="FeesModule.exportCSV()">ðŸ“¥ Export CSV</button>
+            <button class="btn btn-primary btn-sm" onclick="FeesModule.openAddModal()">+ Add Fee</button>
+          </div>
+        </div>
+
+        <div id="feeStats"></div>
+
+        <div class="card">
+          <div class="table-wrapper">
+            <table id="feesTable">
+              <thead>
+                <tr>
+                  <th>Student</th><th>ID</th><th>Semester</th><th>Expected</th><th>Collected</th><th>Balance</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="feesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
@@ -24,21 +49,27 @@
       <div class="modal-header"><h3 id="feeModalTitle">Update Fee</h3><button class="modal-close" onclick="Utils.closeModal('feeModal')">âœ•</button></div>
       <form id="feeForm">
         <input type="hidden" name="id">
-        <input type="hidden" name="studentId">
-        <div class="form-group">
-          <label>Semester</label>
-          <input type="text" name="semester" class="form-control" required>
-          <div class="form-error"></div>
-        </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Total Amount (â‚¹)</label>
-            <input type="number" name="amount" class="form-control" required min="0">
+            <label>Student</label>
+            <select name="studentId" id="feeStudentSelect" class="form-control" required></select>
             <div class="form-error"></div>
           </div>
           <div class="form-group">
+            <label>Total Amount (â‚¹)</label>
+            <input type="number" name="totalAmount" class="form-control" required min="0">
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
             <label>Amount Paid (â‚¹)</label>
-            <input type="number" name="paid" class="form-control" required min="0">
+            <input type="number" name="paidAmount" class="form-control" required min="0">
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <input type="text" name="semester" class="form-control" required>
             <div class="form-error"></div>
           </div>
         </div>

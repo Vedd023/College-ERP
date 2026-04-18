@@ -154,7 +154,10 @@ const Utils = (() => {
   /** Clear form */
   function clearForm(formId) {
     const form = document.getElementById(formId);
-    if (form) form.reset();
+    if (form) {
+      form.reset();
+      form.querySelectorAll('input[type="hidden"]').forEach(el => el.value = '');
+    }
   }
 
   return {

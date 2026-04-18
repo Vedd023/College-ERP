@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faculty â€” College ERP</title>
+  <title>Faculty — College ERP</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <div class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="hamburger" id="hamburger">â˜°</button>
+          <button class="hamburger" id="hamburger">☰</button>
           <h1>Faculty Management</h1>
         </div>
         <div class="topbar-right"></div>
@@ -60,16 +60,28 @@
             <div class="form-error"></div>
           </div>
         </div>
-        <div class="form-group">
-          <label>Department</label>
-          <select name="department" class="form-control" required>
-            <option value="">Select Department</option>
-            <option value="Computer Science">Computer Science</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Business">Business</option>
-            <option value="Mathematics">Mathematics</option>
-          </select>
-          <div class="form-error"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department</label>
+            <select name="department" class="form-control" required>
+              <option value="">Select Department</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Business">Business</option>
+              <option value="Mathematics">Mathematics</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" id="fac_gender" class="form-control" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group">
