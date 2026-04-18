@@ -55,10 +55,27 @@ const FacultyModule = (() => {
   }
 
   function setupForm() {
-    document.getElementById('facultyForm').addEventListener('submit', async (e) => {
+    // Dynamically inject password field for new faculty
+    const formRow = document.createElement('div');
+    formRow.className = 'form-row';
+    formRow.id = 'adminFacultyPasswordRow';
+    formRow.innerHTML = `
+      <div class="form-group">
+        <label>Account Password (for new faculty)</label>
+        <input type="text" name="password" id="adminFacultyNewPassword" class="form-control" minlength="6">
+      </div>
+      <div></div>
+    `;
+    const form = document.getElementById('facultyForm');
+    form.insertBefore(formRow, form.querySelector('.modal-footer'));
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!Utils.validateForm('facultyForm')) return;
       const data = Utils.getFormData('facultyForm');
+      const password = data.password;
+      delete data.password;
+      
       const subjectSelect = document.getElementById('subjectSelect');
       data.subjects = Array.from(subjectSelect.selectedOptions).map(o => o.value);
       
@@ -69,9 +86,24 @@ const FacultyModule = (() => {
           await Store.updateItem('faculty', data.id, data);
           Utils.showToast('Faculty updated', 'success');
         } else {
+          if (!password) {
+            Utils.showToast('Password is required for new faculty', 'error');
+            btn.disabled = false;
+            return;
+          }
           delete data.id;
-          await Store.createItem('faculty', data);
-          Utils.showToast('Faculty added', 'success');
+          
+          // 1. Create faculty record in Firestore
+          const facultyRec = await Store.createItem('faculty', data);
+          
+          // 2. Create Firebase Auth user
+          await Auth.adminCreateAccount(data.email, password, {
+            name: data.name,
+            role: 'faculty',
+            linkedId: facultyRec.id
+          });
+          
+          Utils.showToast('Faculty created successfully', 'success');
         }
         Utils.closeModal('facultyModal');
         Utils.clearForm('facultyForm');
@@ -87,6 +119,8 @@ const FacultyModule = (() => {
   function openAddModal() {
     document.getElementById('facultyModalTitle').textContent = 'Add Faculty';
     Utils.clearForm('facultyForm');
+    document.getElementById('adminFacultyPasswordRow').style.display = 'grid';
+    document.getElementById('adminFacultyNewPassword').required = true;
     Utils.openModal('facultyModal');
   }
 
@@ -97,6 +131,8 @@ const FacultyModule = (() => {
     Utils.populateForm('facultyForm', fac);
     const select = document.getElementById('subjectSelect');
     Array.from(select.options).forEach(opt => { opt.selected = (fac.subjects || []).includes(opt.value); });
+    document.getElementById('adminFacultyPasswordRow').style.display = 'none';
+    document.getElementById('adminFacultyNewPassword').required = false;
     Utils.openModal('facultyModal');
   }
 
