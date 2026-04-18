@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fees â€” College ERP</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="hamburger" id="hamburger">â˜°</button><h1>Fee Management</h1></div>
+        <div class="topbar-right"></div>
+      </header>
+      <main class="page-content" id="feesContent"></main>
+    </div>
+  </div>
+
+  <!-- Edit Fee Modal -->
+  <div class="modal-overlay" id="feeModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header"><h3 id="feeModalTitle">Update Fee</h3><button class="modal-close" onclick="Utils.closeModal('feeModal')">âœ•</button></div>
+      <form id="feeForm">
+        <input type="hidden" name="id">
+        <input type="hidden" name="studentId">
+        <div class="form-group">
+          <label>Semester</label>
+          <input type="text" name="semester" class="form-control" required>
+          <div class="form-error"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total Amount (â‚¹)</label>
+            <input type="number" name="amount" class="form-control" required min="0">
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Amount Paid (â‚¹)</label>
+            <input type="number" name="paid" class="form-control" required min="0">
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control" required>
+              <option value="paid">Paid</option>
+              <option value="partial">Partial</option>
+              <option value="unpaid">Unpaid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" name="dueDate" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('feeModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../data/seed.js"></script>
+  <script src="../assets/js/fees.js"></script>
+  <script>
+    seedData();
+    Auth.guard([]).then(user => {
+      if (user) { Sidebar.init(); FeesModule.init(user); }
+    });
+  </script>
+</body>
+</html>
+
+

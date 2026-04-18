@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students â€” College ERP</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" id="hamburger">â˜°</button>
+          <h1>Student Management</h1>
+        </div>
+        <div class="topbar-right"></div>
+      </header>
+      <main class="page-content">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input type="text" class="search-input" id="searchStudents" placeholder="Search students...">
+            <select class="form-control" id="filterCourse" style="width:auto">
+              <option value="">All Courses</option>
+            </select>
+          </div>
+          <div class="toolbar-right" id="studentActions">
+            <button class="btn btn-secondary btn-sm" onclick="StudentsModule.exportCSV()">ðŸ“¥ Export CSV</button>
+            <button class="btn btn-primary btn-sm" onclick="StudentsModule.openAddModal()">+ Add Student</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrapper">
+            <table id="studentsTable">
+              <thead>
+                <tr>
+                  <th>Student ID</th><th>Name</th><th>Course</th><th>Semester</th><th>Email</th><th>Phone</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="studentModalTitle">Add Student</h3>
+        <button class="modal-close" onclick="Utils.closeModal('studentModal')">âœ•</button>
+      </div>
+      <form id="studentForm">
+        <input type="hidden" name="id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sf_name">Full Name</label>
+            <input type="text" name="name" id="sf_name" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="sf_studentId">Student ID</label>
+            <input type="text" name="studentId" id="sf_studentId" class="form-control" required placeholder="e.g. STU011">
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sf_course">Course</label>
+            <select name="course" id="sf_course" class="form-control" required>
+              <option value="">Select Course</option>
+              <option value="B.Tech CSE">B.Tech CSE</option>
+              <option value="B.Tech ECE">B.Tech ECE</option>
+              <option value="BBA">BBA</option>
+              <option value="MBA">MBA</option>
+              <option value="B.Sc">B.Sc</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="sf_semester">Semester</label>
+            <select name="semester" id="sf_semester" class="form-control" required>
+              <option value="">Select</option>
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+              <option value="7">7</option><option value="8">8</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sf_email">Email</label>
+            <input type="email" name="email" id="sf_email" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="sf_phone">Phone</label>
+            <input type="tel" name="phone" id="sf_phone" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('studentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header">
+        <h3>Confirm Delete</h3>
+        <button class="modal-close" onclick="Utils.closeModal('deleteModal')">âœ•</button>
+      </div>
+      <p>Are you sure you want to delete this student? This action cannot be undone.</p>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="Utils.closeModal('deleteModal')">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Profile Modal -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header">
+        <h3>Student Profile</h3>
+        <button class="modal-close" onclick="Utils.closeModal('profileModal')">âœ•</button>
+      </div>
+      <div id="profileContent"></div>
+    </div>
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../data/seed.js"></script>
+  <script src="../assets/js/students.js"></script>
+  <script>
+    seedData();
+    Auth.guard([]).then(user => {
+      if (user) { Sidebar.init(); StudentsModule.init(user); }
+    });
+  </script>
+</body>
+</html>
+
+

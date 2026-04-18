@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses â€” College ERP</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="hamburger" id="hamburger">â˜°</button><h1>Courses</h1></div>
+        <div class="topbar-right"></div>
+      </header>
+      <main class="page-content">
+        <div class="toolbar">
+          <div class="toolbar-left"><input type="text" class="search-input" id="searchCourses" placeholder="Search courses..."></div>
+          <div class="toolbar-right" id="courseActions">
+            <button class="btn btn-primary btn-sm" onclick="CoursesModule.openAddModal()">+ Add Course</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table id="coursesTable">
+              <thead><tr><th>Code</th><th>Name</th><th>Credits</th><th>Semester</th><th>Department</th><th>Faculty</th><th>Actions</th></tr></thead>
+              <tbody id="coursesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="courseModal">
+    <div class="modal">
+      <div class="modal-header"><h3 id="courseModalTitle">Add Course</h3><button class="modal-close" onclick="Utils.closeModal('courseModal')">âœ•</button></div>
+      <form id="courseForm">
+        <input type="hidden" name="id">
+        <div class="form-row">
+          <div class="form-group"><label>Course Name</label><input type="text" name="name" class="form-control" required><div class="form-error"></div></div>
+          <div class="form-group"><label>Course Code</label><input type="text" name="code" class="form-control" required placeholder="e.g. CS601"><div class="form-error"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Credits</label><input type="number" name="credits" class="form-control" required min="1" max="6"><div class="form-error"></div></div>
+          <div class="form-group"><label>Semester</label>
+            <select name="semester" class="form-control" required>
+              <option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select><div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Department</label>
+            <select name="department" class="form-control" required>
+              <option value="">Select</option><option value="Computer Science">Computer Science</option><option value="Electronics">Electronics</option><option value="Business">Business</option><option value="Mathematics">Mathematics</option>
+            </select><div class="form-error"></div>
+          </div>
+          <div class="form-group"><label>Assign Faculty</label><select name="facultyId" id="courseFacultySelect" class="form-control"><option value="">None</option></select></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('courseModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../data/seed.js"></script>
+  <script src="../assets/js/courses.js"></script>
+  <script>
+    seedData();
+    Auth.guard([]).then(user => {
+      if (user) { Sidebar.init(); CoursesModule.init(user); }
+    });
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exams â€” College ERP</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="hamburger" id="hamburger">â˜°</button><h1>Exam Schedule</h1></div>
+        <div class="topbar-right"></div>
+      </header>
+      <main class="page-content">
+        <div class="toolbar">
+          <div class="toolbar-left"><input type="text" class="search-input" id="searchExams" placeholder="Search exams..."></div>
+          <div class="toolbar-right" id="examActions">
+            <button class="btn btn-primary btn-sm" onclick="ExamsModule.openAddModal()">+ Schedule Exam</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table id="examsTable">
+              <thead><tr><th>Subject</th><th>Exam Type</th><th>Date</th><th>Time</th><th>Room</th><th>Semester</th><th>Actions</th></tr></thead>
+              <tbody id="examsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" id="examModal">
+    <div class="modal" style="max-width:480px">
+      <div class="modal-header"><h3 id="examModalTitle">Schedule Exam</h3><button class="modal-close" onclick="Utils.closeModal('examModal')">âœ•</button></div>
+      <form id="examForm">
+        <input type="hidden" name="id">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Subject</label>
+            <select name="subjectCode" id="examSubjectSelect" class="form-control" required>
+              <option value="">Select</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Exam Type</label>
+            <select name="examType" class="form-control" required>
+              <option value="Mid-Term">Mid-Term</option>
+              <option value="End-Term">End-Term</option>
+              <option value="Quiz">Quiz</option>
+              <option value="Supplementary">Supplementary</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Time</label>
+            <input type="text" name="time" class="form-control" required placeholder="e.g. 10:00 AM">
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Room</label>
+            <input type="text" name="room" class="form-control" placeholder="e.g. Hall A">
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select name="semester" class="form-control" required>
+              <option value="">Select</option>
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+              <option value="7">7</option><option value="8">8</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('examModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../data/seed.js"></script>
+  <script src="../assets/js/exams.js"></script>
+  <script>
+    seedData();
+    Auth.guard([]).then(user => {
+      if (user) { Sidebar.init(); ExamsModule.init(user); }
+    });
+  </script>
+</body>
+</html>
+
+

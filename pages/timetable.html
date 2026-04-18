@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable â€” College ERP</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="hamburger" id="hamburger">â˜°</button><h1>Timetable</h1></div>
+        <div class="topbar-right"></div>
+      </header>
+      <main class="page-content" id="timetableContent"></main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Slot Modal -->
+  <div class="modal-overlay" id="slotModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header"><h3 id="slotModalTitle">Add Slot</h3><button class="modal-close" onclick="Utils.closeModal('slotModal')">âœ•</button></div>
+      <form id="slotForm">
+        <input type="hidden" name="id">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Day</label>
+            <select name="day" class="form-control" required>
+              <option value="">Select</option>
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option><option>Saturday</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label>Time Slot</label>
+            <select name="slot" class="form-control" required>
+              <option value="">Select</option>
+              <option>09:00-10:00</option><option>10:00-11:00</option><option>11:00-12:00</option>
+              <option>12:00-01:00</option><option>02:00-03:00</option><option>03:00-04:00</option>
+              <option>04:00-05:00</option><option>05:00-06:00</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select name="subjectCode" id="slotSubjectSelect" class="form-control" required>
+            <option value="">Select Subject</option>
+          </select>
+          <div class="form-error"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Faculty</label>
+            <select name="facultyId" id="slotFacultySelect" class="form-control">
+              <option value="">Select</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Room</label>
+            <input type="text" name="room" class="form-control" placeholder="e.g. A101">
+            <div class="form-error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('slotModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Slot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../data/seed.js"></script>
+  <script src="../assets/js/timetable.js"></script>
+  <script>
+    seedData();
+    Auth.guard([]).then(user => {
+      if (user) { Sidebar.init(); TimetableModule.init(user); }
+    });
+  </script>
+</body>
+</html>
+
+
