@@ -72,10 +72,22 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" class="form-control" required>
-          <div class="form-error"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" class="form-control" required>
+            <div class="form-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" class="form-control" required>
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="form-error"></div>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary" id="registerBtn" style="width:100%; margin-top:10px;">Register</button>
@@ -145,7 +157,8 @@
           course: document.getElementById('course').value,
           semester: document.getElementById('semester').value,
           email: email,
-          phone: document.getElementById('phone').value.trim()
+          phone: document.getElementById('phone').value.trim(),
+          gender: document.getElementById('gender').value
         };
 
         // 1. Create Student record in Firestore
@@ -165,6 +178,7 @@
           await Auth.register(email, password, profileData);
         }
 
+        sessionStorage.setItem('justLoggedIn', 'true');
         window.location.href = 'pages/dashboard.html';
 
       } catch (err) {

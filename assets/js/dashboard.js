@@ -9,6 +9,46 @@ const DashboardModule = (() => {
     if (user.role === 'admin') await renderAdminDashboard(container);
     else if (user.role === 'faculty') await renderFacultyDashboard(container, user);
     else if (user.role === 'student') await renderStudentDashboard(container, user);
+
+    if (sessionStorage.getItem('justLoggedIn') === 'true') {
+      sessionStorage.removeItem('justLoggedIn');
+      let gender = 'Male'; // Default
+      
+      if (user.role === 'student' || user.role === 'faculty') {
+         const profileData = await Store.getItemById(user.role === 'student' ? 'students' : 'faculty', user.linkedId);
+         if (profileData && profileData.gender) {
+             gender = profileData.gender;
+         }
+      }
+      showWelcomeAnimation(gender);
+    }
+  }
+
+  function showWelcomeAnimation(gender) {
+    const overlay = document.createElement('div');
+    overlay.className = 'welcome-animation-overlay';
+    
+    const container = document.createElement('div');
+    container.className = 'welcome-character-container';
+    
+    const character = document.createElement('div');
+    character.className = 'welcome-character';
+    
+    if (gender === 'Female') {
+      character.innerHTML = '👩‍💼'; 
+    } else {
+      character.innerHTML = '👨‍💼'; 
+    }
+    
+    container.appendChild(character);
+    overlay.appendChild(container);
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => {
+      if(overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+    }, 5500); 
   }
 
   // ---- ADMIN DASHBOARD ----
