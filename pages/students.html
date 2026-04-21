@@ -26,7 +26,7 @@
             </select>
           </div>
           <div class="toolbar-right" id="studentActions">
-            <button class="btn btn-secondary btn-sm" onclick="StudentsModule.exportCSV()">ðŸ“¥ Export CSV</button>
+            <button class="btn btn-secondary btn-sm" onclick="StudentsModule.exportCSV()">&#128229; Export CSV</button>
             <button class="btn btn-primary btn-sm" onclick="StudentsModule.openAddModal()">+ Add Student</button>
           </div>
         </div>
@@ -52,7 +52,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3 id="studentModalTitle">Add Student</h3>
-        <button class="modal-close" onclick="Utils.closeModal('studentModal')">âœ•</button>
+        <button class="modal-close" onclick="Utils.closeModal('studentModal')">&times;</button>
       </div>
       <form id="studentForm">
         <input type="hidden" name="id">
@@ -92,6 +92,7 @@
             <div class="form-error"></div>
           </div>
         </div>
+        <div class="form-row">
           <div class="form-group">
             <label for="sf_email">Email</label>
             <input type="email" name="email" id="sf_email" class="form-control" required>
@@ -129,7 +130,7 @@
     <div class="modal" style="max-width:400px">
       <div class="modal-header">
         <h3>Confirm Delete</h3>
-        <button class="modal-close" onclick="Utils.closeModal('deleteModal')">âœ•</button>
+        <button class="modal-close" onclick="Utils.closeModal('deleteModal')">&times;</button>
       </div>
       <p>Are you sure you want to delete this student? This action cannot be undone.</p>
       <div class="modal-footer">
@@ -144,7 +145,7 @@
     <div class="modal" style="max-width:600px">
       <div class="modal-header">
         <h3>Student Profile</h3>
-        <button class="modal-close" onclick="Utils.closeModal('profileModal')">âœ•</button>
+        <button class="modal-close" onclick="Utils.closeModal('profileModal')">&times;</button>
       </div>
       <div id="profileContent"></div>
     </div>

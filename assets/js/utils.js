@@ -94,6 +94,10 @@ const Utils = (() => {
     const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('erp_theme', next);
+
+    // Update icon if button exists
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = next === 'dark' ? '🌙' : '☀️';
   }
 
   // ---- Table Search ----

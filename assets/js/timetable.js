@@ -37,7 +37,7 @@ const TimetableModule = (() => {
       Store.getItems('courses'),
       Store.getItems('faculty')
     ]);
-    
+
     // Both Admin and Faculty can edit
     const canEdit = currentUser.role === 'admin' || currentUser.role === 'faculty';
 
@@ -56,24 +56,24 @@ const TimetableModule = (() => {
           <div class="timetable-cell header">Time</div>
           ${DAYS.map(d => `<div class="timetable-cell header">${d}</div>`).join('')}
           ${SLOTS.map(slot => {
-            let html = `<div class="timetable-cell time">${slot}</div>`;
-            DAYS.forEach(day => {
-              const entry = timetable.find(t => t.day === day && t.slot === slot);
-              if (entry) {
-                const fac = faculty.find(f => f.id === entry.facultyId);
-                html += `<div class="timetable-cell">
+      let html = `<div class="timetable-cell time">${slot}</div>`;
+      DAYS.forEach(day => {
+        const entry = timetable.find(t => t.day === day && t.slot === slot);
+        if (entry) {
+          const fac = faculty.find(f => f.id === entry.facultyId);
+          html += `<div class="timetable-cell">
                   <div class="slot" ${canEdit ? `onclick="TimetableModule.openEditModal('${entry.id}')"` : ''}>
                     <strong>${entry.subjectCode}</strong><br>
                     <span style="font-size:0.65rem;color:var(--text-secondary)">${fac ? fac.name.split(' ').pop() : ''}</span><br>
                     <span style="font-size:0.65rem">${entry.room || ''}</span>
                   </div>
                 </div>`;
-              } else {
-                html += `<div class="timetable-cell">${canEdit ? `<button class="btn btn-sm btn-secondary" style="font-size:0.65rem" onclick="TimetableModule.openAddModalWith('${day}','${slot}')">+</button>` : ''}</div>`;
-              }
-            });
-            return html;
-          }).join('')}
+        } else {
+          html += `<div class="timetable-cell">${canEdit ? `<button class="btn btn-sm btn-secondary" style="font-size:0.65rem" onclick="TimetableModule.openAddModalWith('${day}','${slot}')">+</button>` : ''}</div>`;
+        }
+      });
+      return html;
+    }).join('')}
         </div>
       </div>
     `;
@@ -82,7 +82,7 @@ const TimetableModule = (() => {
   function setupForm() {
     const form = document.getElementById('slotForm');
     if (!form) return;
-    
+
     // Add delete button to form dynamically
     const footer = document.querySelector('.modal-footer');
     if (!document.getElementById('deleteSlotBtn')) {
@@ -104,7 +104,7 @@ const TimetableModule = (() => {
       e.preventDefault();
       if (!Utils.validateForm('slotForm')) return;
       const data = Utils.getFormData('slotForm');
-      
+
       // Auto assign faculty ID if faculty is editing and field is blank
       if (currentUser.role === 'faculty' && !data.facultyId) {
         data.facultyId = currentUser.linkedId;
@@ -136,13 +136,13 @@ const TimetableModule = (() => {
     document.getElementById('slotModalTitle').textContent = 'Add Slot';
     Utils.clearForm('slotForm');
     document.getElementById('deleteSlotBtn').style.display = 'none';
-    
+
     // Auto-select faculty if user is faculty
     if (currentUser.role === 'faculty') {
       const select = document.querySelector('#slotForm [name="facultyId"]');
       if (select) select.value = currentUser.linkedId;
     }
-    
+
     Utils.openModal('slotModal');
   }
 

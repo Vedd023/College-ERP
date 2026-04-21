@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -36,7 +36,10 @@
   <!-- Add/Edit Modal -->
   <div class="modal-overlay" id="examModal">
     <div class="modal" style="max-width:480px">
-      <div class="modal-header"><h3 id="examModalTitle">Schedule Exam</h3><button class="modal-close" onclick="Utils.closeModal('examModal')">âœ•</button></div>
+      <div class="modal-header">
+        <h3 id="examModalTitle">Schedule Exam</h3>
+        <button class="modal-close" onclick="Utils.closeModal('examModal')">&times;</button>
+      </div>
       <form id="examForm">
         <input type="hidden" name="id">
         <div class="form-row">

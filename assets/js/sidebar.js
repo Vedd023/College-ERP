@@ -70,8 +70,9 @@ const Sidebar = (() => {
 
     sidebarEl.innerHTML = `
       <div class="sidebar-brand">
+        <img src="../assets/img/logo.png" alt="EduNexus Logo" class="brand-logo" onerror="this.style.display='none'">
         <div class="brand-icon">🎓</div>
-        <h2>College ERP</h2>
+        <h2>EduNexus</h2>
       </div>
       <nav class="sidebar-nav">${navHTML}</nav>
       <div class="sidebar-footer">
@@ -88,8 +89,11 @@ const Sidebar = (() => {
 
     const topbarRight = document.querySelector('.topbar-right');
     if (topbarRight) {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
       topbarRight.innerHTML = `
-        <button class="btn-icon" onclick="Utils.toggleDarkMode()" title="Toggle dark mode">🌙</button>
+        <button class="btn-icon" id="themeToggle" onclick="Utils.toggleDarkMode()" title="Toggle dark mode">
+          ${theme === 'dark' ? '🌙' : '☀️'}
+        </button>
       `;
     }
 

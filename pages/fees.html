@@ -20,7 +20,7 @@
             <input type="text" class="search-input" id="searchFees" placeholder="Search by student name or ID...">
           </div>
           <div class="toolbar-right hidden" id="feeActions">
-            <button class="btn btn-secondary btn-sm" onclick="FeesModule.exportCSV()">ðŸ“¥ Export CSV</button>
+            <button class="btn btn-secondary btn-sm" onclick="FeesModule.exportCSV()">&#128229; Export CSV</button>
             <button class="btn btn-primary btn-sm" onclick="FeesModule.openAddModal()">+ Add Fee</button>
           </div>
         </div>
@@ -46,7 +46,10 @@
   <!-- Edit Fee Modal -->
   <div class="modal-overlay" id="feeModal">
     <div class="modal" style="max-width:420px">
-      <div class="modal-header"><h3 id="feeModalTitle">Update Fee</h3><button class="modal-close" onclick="Utils.closeModal('feeModal')">âœ•</button></div>
+      <div class="modal-header">
+        <h3 id="feeModalTitle">Update Fee</h3>
+        <button class="modal-close" onclick="Utils.closeModal('feeModal')">&times;</button>
+      </div>
       <form id="feeForm">
         <input type="hidden" name="id">
         <div class="form-row">
