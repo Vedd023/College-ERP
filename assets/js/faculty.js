@@ -17,11 +17,12 @@ const FacultyModule = (() => {
     tbody.innerHTML = faculty.map(f => `
       <tr>
         <td>${f.facultyId}</td>
-        <td>${f.name}</td>
+        <td><a href="#" onclick="FacultyModule.viewProfile('${f.id}');return false">${f.name}</a></td>
         <td>${f.department}</td>
         <td>${f.email}</td>
         <td>${(f.subjects || []).map(s => `<span class="badge badge-info" style="margin:2px">${s}</span>`).join(' ') || '—'}</td>
         <td>
+          <button class="btn-icon btn-sm" onclick="FacultyModule.viewProfile('${f.id}')" title="View">👁️</button>
           <button class="btn-icon btn-sm" onclick="FacultyModule.openEditModal('${f.id}')" title="Edit">✏️</button>
           <button class="btn-icon btn-sm" onclick="FacultyModule.confirmDelete('${f.id}')" title="Delete">🗑️</button>
         </td>
@@ -157,11 +158,45 @@ const FacultyModule = (() => {
     };
   }
 
+  async function viewProfile(id) {
+    const fac = await Store.getItemById('faculty', id);
+    if (!fac) return;
+
+    const content = document.getElementById('facProfileContent');
+    content.innerHTML = `
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card">
+          <div class="stat-icon purple">👩‍🏫</div>
+          <div class="stat-info"><h4>${fac.facultyId}</h4><p>Faculty ID</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📚</div>
+          <div class="stat-info"><h4>${(fac.subjects || []).length}</h4><p>Subjects</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">🏢</div>
+          <div class="stat-info"><h4>${fac.department}</h4><p>Dept</p></div>
+        </div>
+      </div>
+      <table style="width:100%;font-size:0.85rem;margin-bottom:16px">
+        <tr><td style="padding:6px 0;color:var(--text-secondary)">Name</td><td style="padding:6px 0;font-weight:500">${fac.name}</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary)">Email</td><td style="padding:6px 0">${fac.email}</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary)">Phone</td><td style="padding:6px 0">${fac.phone || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary)">Gender</td><td style="padding:6px 0">${fac.gender || '—'}</td></tr>
+      </table>
+      <h4 style="margin-bottom:8px">Assigned Subjects</h4>
+      <div class="tag-container" style="display:flex;flex-wrap:wrap;gap:8px">
+        ${(fac.subjects || []).map(s => `<span class="badge badge-info">${s}</span>`).join('') || 'No subjects assigned'}
+      </div>
+    `;
+    Utils.openModal('facProfileModal');
+  }
+
   async function exportCSV() {
     const faculty = await Store.getItems('faculty');
     const data = faculty.map(f => ({ ...f, subjects: (f.subjects || []).join('; ') }));
     Utils.exportToCSV(data, 'faculty.csv');
   }
 
-  return { init, openAddModal, openEditModal, confirmDelete, exportCSV };
+  return { init, openAddModal, openEditModal, confirmDelete, viewProfile, exportCSV };
 })();

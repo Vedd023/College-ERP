@@ -128,7 +128,18 @@
     </div>
   </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <!-- Faculty Profile Modal -->
+  <div class="modal-overlay" id="facProfileModal">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header">
+        <h3>Faculty Profile</h3>
+        <button class="modal-close" onclick="Utils.closeModal('facProfileModal')">&times;</button>
+      </div>
+      <div id="facProfileContent"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="../assets/js/firebase-config.js"></script>
@@ -146,5 +157,3 @@
   </script>
 </body>
 </html>
-
-

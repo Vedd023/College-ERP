@@ -125,5 +125,40 @@ const Auth = (() => {
     } catch (e) { console.error('_getProfile:', e); return null; }
   }
 
-  return { currentUser, hasRole, getBasePath, loginWithEmail, loginWithGoogle, register, completeGoogleProfile, adminCreateAccount, logout, guard };
+  /** Login using Student/Faculty ID instead of email */
+  async function loginWithId(role, id, password) {
+    const collection = role === 'faculty' ? 'faculty' : 'students';
+    const idField = role === 'faculty' ? 'facultyId' : 'studentId';
+    
+    const snapshot = await db.collection(collection).where(idField, '==', id).get();
+    if (snapshot.empty) {
+      throw new Error(`Invalid ${role === 'faculty' ? 'Faculty' : 'Student'} ID`);
+    }
+    
+    const data = snapshot.docs[0].data();
+    if (!data.email) {
+      throw new Error('No email associated with this ID');
+    }
+    
+    return loginWithEmail(data.email, password);
+  }
+
+  /** Send password reset email */
+  async function forgotPassword(idOrEmail, role = 'admin') {
+    let email = idOrEmail;
+    
+    if (role !== 'admin') {
+        const collection = role === 'faculty' ? 'faculty' : 'students';
+        const idField = role === 'faculty' ? 'facultyId' : 'studentId';
+        const snapshot = await db.collection(collection).where(idField, '==', idOrEmail).get();
+        if (snapshot.empty) throw new Error(`Invalid ${role} ID`);
+        email = snapshot.docs[0].data().email;
+    }
+    
+    if (!email) throw new Error('No email found for this user');
+    await auth.sendPasswordResetEmail(email);
+    return true;
+  }
+
+  return { currentUser, hasRole, getBasePath, loginWithEmail, loginWithId, forgotPassword, loginWithGoogle, register, completeGoogleProfile, adminCreateAccount, logout, guard };
 })();

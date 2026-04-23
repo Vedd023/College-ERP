@@ -12,43 +12,34 @@ const DashboardModule = (() => {
 
     if (sessionStorage.getItem('justLoggedIn') === 'true') {
       sessionStorage.removeItem('justLoggedIn');
-      let gender = 'Male'; // Default
-      
-      if (user.role === 'student' || user.role === 'faculty') {
-         const profileData = await Store.getItemById(user.role === 'student' ? 'students' : 'faculty', user.linkedId);
-         if (profileData && profileData.gender) {
-             gender = profileData.gender;
-         }
-      }
-      showWelcomeAnimation(gender);
+      showWelcomeAnimation(user.name, user.role);
     }
   }
 
-  function showWelcomeAnimation(gender) {
+  function showWelcomeAnimation(userName, role) {
     const overlay = document.createElement('div');
     overlay.className = 'welcome-animation-overlay';
     
-    const container = document.createElement('div');
-    container.className = 'welcome-character-container';
+    overlay.innerHTML = `
+      <div class="welcome-card">
+        <div class="welcome-badge">Access Granted</div>
+        <h1 class="welcome-title">Welcome, ${userName.split(' ')[0]}</h1>
+        <p class="welcome-subtitle">Initializing your ${role} dashboard...</p>
+        <div class="welcome-progress-container">
+          <div class="welcome-progress-bar"></div>
+        </div>
+      </div>
+    `;
     
-    const character = document.createElement('div');
-    character.className = 'welcome-character';
-    
-    if (gender === 'Female') {
-      character.innerHTML = '👩‍💼'; 
-    } else {
-      character.innerHTML = '👨‍💼'; 
-    }
-    
-    container.appendChild(character);
-    overlay.appendChild(container);
     document.body.appendChild(overlay);
     
+    // Smooth fade out
     setTimeout(() => {
-      if(overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
-      }
-    }, 5500); 
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        if(overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 800);
+    }, 3000); 
   }
 
   // ---- ADMIN DASHBOARD ----
@@ -144,12 +135,12 @@ const DashboardModule = (() => {
     container.innerHTML = `
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon purple">📚</div>
-          <div class="stat-info"><h4>${myCourses.length}</h4><p>Assigned Subjects</p></div>
+          <div class="stat-icon purple">🆔</div>
+          <div class="stat-info"><h4>${facultyProfile ? facultyProfile.facultyId : '—'}</h4><p>Faculty ID</p></div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon blue">📅</div>
-          <div class="stat-info"><h4><a href="attendance.html" style="color:inherit">Mark Now →</a></h4><p>Quick Attendance</p></div>
+          <div class="stat-icon blue">📚</div>
+          <div class="stat-info"><h4>${myCourses.length}</h4><p>Assigned Subjects</p></div>
         </div>
         <div class="stat-card">
           <div class="stat-icon green">📝</div>
