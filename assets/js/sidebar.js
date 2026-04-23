@@ -15,6 +15,7 @@ const Sidebar = (() => {
       { label: 'Grades', icon: '📝', href: 'grades.html' },
       { label: 'Timetable', icon: '🕐', href: 'timetable.html' },
       { label: 'Exams', icon: '📋', href: 'exams.html' },
+      { label: 'Assignments', icon: '📤', href: 'assignments.html' },
       { section: 'Finance' },
       { label: 'Fees', icon: '💰', href: 'fees.html' },
     ],
@@ -27,6 +28,7 @@ const Sidebar = (() => {
       { label: 'Courses', icon: '📚', href: 'courses.html' },
       { label: 'Timetable', icon: '🕐', href: 'timetable.html' },
       { label: 'Exams', icon: '📋', href: 'exams.html' },
+      { label: 'Assignments', icon: '📤', href: 'assignments.html' },
       { section: 'View' },
       { label: 'Students', icon: '🎓', href: 'students.html' },
     ],
@@ -39,6 +41,7 @@ const Sidebar = (() => {
       { label: 'Courses', icon: '📚', href: 'courses.html' },
       { label: 'Timetable', icon: '🕐', href: 'timetable.html' },
       { label: 'Exams', icon: '📋', href: 'exams.html' },
+      { label: 'Assignments', icon: '📤', href: 'assignments.html' },
       { section: 'Finance' },
       { label: 'Fees', icon: '💰', href: 'fees.html' },
     ]
@@ -69,10 +72,11 @@ const Sidebar = (() => {
     const initials = user.name ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : 'U';
 
     sidebarEl.innerHTML = `
-      <div class="sidebar-brand">
+      <div class="sidebar-brand" id="sidebarBrand">
         <img src="../assets/img/logo.png" alt="EduNexus Logo" class="brand-logo" onerror="this.style.display='none'">
         <div class="brand-icon">🎓</div>
         <h2>EduNexus</h2>
+        <button class="collapser" id="sidebarCollapse" title="Collapse Menu">←</button>
       </div>
       <nav class="sidebar-nav">${navHTML}</nav>
       <div class="sidebar-footer">
@@ -99,11 +103,40 @@ const Sidebar = (() => {
 
     const hamburger = document.querySelector('.hamburger');
     if (hamburger) {
-      hamburger.addEventListener('click', () => sidebarEl.classList.toggle('open'));
+      hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebarEl.classList.toggle('open');
+      });
+    }
+
+    const collapser = document.getElementById('sidebarCollapse');
+    if (collapser) {
+      collapser.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebarEl.classList.remove('open');
+      });
+    }
+
+    const brand = document.getElementById('sidebarBrand');
+    if (brand) {
+      brand.addEventListener('click', (e) => {
+        // If they clicked the collapser, don't refresh
+        if (e.target.closest('.collapser')) return;
+        window.location.reload();
+      });
     }
 
     sidebarEl.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => sidebarEl.classList.remove('open'));
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      const isHamburger = e.target.closest('.hamburger');
+      const isSidebar = e.target.closest('.sidebar');
+      if (!isHamburger && !isSidebar && sidebarEl.classList.contains('open')) {
+        sidebarEl.classList.remove('open');
+      }
     });
   }
 
