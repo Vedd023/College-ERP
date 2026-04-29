@@ -115,14 +115,111 @@ const DashboardModule = (() => {
       options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
     });
 
-    // Fee chart
+    // Fee chart — with interactive hover animations
     const paid = fees.filter(f => f.status === 'paid').length;
     const partial = fees.filter(f => f.status === 'partial').length;
     const unpaid = fees.filter(f => f.status === 'unpaid').length;
+
+    // Custom center-text plugin
+    const centerTextPlugin = {
+      id: 'centerText',
+      afterDraw(chart) {
+        const { ctx, width, height } = chart;
+        const meta = chart.getDatasetMeta(0);
+        const activeEls = chart.getActiveElements();
+        let label = 'Total';
+        let value = paid + partial + unpaid;
+        if (activeEls.length > 0) {
+          const idx = activeEls[0].index;
+          label = chart.data.labels[idx];
+          value = chart.data.datasets[0].data[idx];
+        }
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-primary').trim() || '#1e293b';
+        ctx.font = `700 26px 'Outfit', sans-serif`;
+        ctx.fillText(value, width / 2, height / 2 - 10);
+        ctx.font = `400 13px 'Outfit', sans-serif`;
+        ctx.letterSpacing = '0.5px';
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#475569';
+        ctx.fillText(label, width / 2, height / 2 + 16);
+        ctx.restore();
+      }
+    };
+
     new Chart(document.getElementById('feeChart'), {
       type: 'doughnut',
-      data: { labels: ['Paid', 'Partial', 'Unpaid'], datasets: [{ data: [paid, partial, unpaid], backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'] }] },
-      options: { responsive: true }
+      data: {
+        labels: ['Paid', 'Partial', 'Unpaid'],
+        datasets: [{
+          data: [paid, partial, unpaid],
+          backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+          hoverBackgroundColor: ['#16a34a', '#d97706', '#dc2626'],
+          borderColor: 'transparent',
+          borderWidth: 2,
+          hoverBorderColor: ['#bbf7d0', '#fef08a', '#fecaca'],
+          hoverBorderWidth: 4,
+          hoverOffset: 18,
+          borderRadius: 4,
+          spacing: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '62%',
+        layout: { padding: 12 },
+        animation: {
+          animateRotate: true,
+          animateScale: true,
+          duration: 1200,
+          easing: 'easeOutQuart'
+        },
+        transitions: {
+          active: {
+            animation: {
+              duration: 300
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 16,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              font: { size: 12, family: 'Inter, system-ui, sans-serif' },
+              color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#94a3b8'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.92)',
+            titleColor: '#f8fafc',
+            bodyColor: '#cbd5e1',
+            titleFont: { size: 13, weight: 'bold', family: 'Inter, system-ui, sans-serif' },
+            bodyFont: { size: 12, family: 'Inter, system-ui, sans-serif' },
+            padding: { top: 10, bottom: 10, left: 14, right: 14 },
+            cornerRadius: 10,
+            displayColors: true,
+            boxPadding: 6,
+            caretSize: 6,
+            caretPadding: 8,
+            animation: { duration: 200, easing: 'easeOutCubic' },
+            callbacks: {
+              label(ctx) {
+                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = total ? Math.round((ctx.parsed / total) * 100) : 0;
+                return ` ${ctx.label}: ${ctx.parsed}  (${pct}%)`;
+              }
+            }
+          }
+        },
+        onHover(event, elements, chart) {
+          chart.canvas.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      },
+      plugins: [centerTextPlugin]
     });
   }
 

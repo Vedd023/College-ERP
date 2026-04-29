@@ -73,8 +73,12 @@ const Sidebar = (() => {
 
     sidebarEl.innerHTML = `
       <div class="sidebar-brand" id="sidebarBrand">
-        <img src="../assets/img/logo.png" alt="EduNexus Logo" class="brand-logo" onerror="this.style.display='none'">
-        <div class="brand-icon">🎓</div>
+        <div class="brand-logo" style="width:38px;height:38px;background:#f59e0b;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3Z" fill="white"/>
+            <path d="M7 12.27V16.18L12 19L17 16.18V12.27L12 15L7 12.27Z" fill="rgba(255,255,255,0.85)"/>
+          </svg>
+        </div>
         <h2>EduNexus</h2>
         <button class="collapser" id="sidebarCollapse" title="Collapse Menu">←</button>
       </div>
