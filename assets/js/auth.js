@@ -21,6 +21,8 @@ const Auth = (() => {
     const cred = await auth.signInWithEmailAndPassword(email, password);
     const profile = await _getProfile(cred.user.uid);
     if (!profile) throw new Error('No user profile found. Please register first.');
+    await db.collection('users').doc(cred.user.uid).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() });
+    profile.lastLogin = new Date(); // Update locally
     _cachedUser = profile;
     return profile;
   }
@@ -34,6 +36,8 @@ const Auth = (() => {
       // First-time Google user — return user info for registration
       return { isNew: true, uid: result.user.uid, email: result.user.email, name: result.user.displayName || '' };
     }
+    await db.collection('users').doc(result.user.uid).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() });
+    profile.lastLogin = new Date(); // Update locally
     _cachedUser = profile;
     return profile;
   }

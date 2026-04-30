@@ -253,6 +253,7 @@ const AttendanceModule = (() => {
           <div class="stat-info"><h4>${attendance.length - totalPresent}</h4><p>Classes Missed</p></div>
         </div>
       </div>
+      <div class="mb-2" id="studentHeatmap"></div>
       <div class="card mb-2">
         <div class="card-header"><h3>Subject-wise Attendance</h3></div>
         <div class="table-wrapper">
@@ -272,6 +273,14 @@ const AttendanceModule = (() => {
         <canvas id="studentAttChart"></canvas>
       </div>
     `;
+
+    // Render personal heatmap
+    if (typeof Heatmap !== 'undefined') {
+      Heatmap.render('studentHeatmap', attendance, {
+        title: 'My Attendance Activity',
+        weeks: 26
+      });
+    }
 
     // Chart
     const labels = Object.keys(bySubject);

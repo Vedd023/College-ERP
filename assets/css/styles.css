@@ -1039,3 +1039,169 @@ select.form-control { cursor: pointer; }
   0% { width: 0; }
   100% { width: 100%; }
 }
+
+/* --- Heatmap --- */
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heatmap-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.heatmap-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.heatmap-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+/* Base empty color */
+.heatmap-level-0 {
+  fill: #ebedf0;
+}
+
+/* Missed class */
+.heatmap-level--1 {
+  fill: #fca5a5;
+}
+
+/* Level 1 — Low presence */
+.heatmap-level-1 {
+  fill: #c6e48b;
+}
+
+/* Level 2 — Medium presence */
+.heatmap-level-2 {
+  fill: #7bc96f;
+}
+
+/* Level 3 — High presence */
+.heatmap-level-3 {
+  fill: #239a3b;
+}
+
+/* Level 4 — Full presence */
+.heatmap-level-4 {
+  fill: #196127;
+}
+
+/* Dark mode heatmap colors */
+[data-theme="dark"] .heatmap-level-0 {
+  fill: #1e293b;
+}
+
+[data-theme="dark"] .heatmap-level--1 {
+  fill: #991b1b;
+}
+
+[data-theme="dark"] .heatmap-level-1 {
+  fill: #064e3b;
+}
+
+[data-theme="dark"] .heatmap-level-2 {
+  fill: #047857;
+}
+
+[data-theme="dark"] .heatmap-level-3 {
+  fill: #059669;
+}
+
+[data-theme="dark"] .heatmap-level-4 {
+  fill: #10b981;
+}
+
+/* Legend */
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.heatmap-legend-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 0 4px;
+}
+
+.heatmap-legend-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Tooltip */
+.heatmap-tooltip {
+  position: fixed;
+  background: rgba(15, 23, 42, 0.94);
+  color: #f1f5f9;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -100%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-family: 'Inter', sans-serif;
+}
+
+.heatmap-tooltip.active {
+  opacity: 1;
+}
+
+.heatmap-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.94);
+}
+
+/* Responsive heatmap */
+@media (max-width: 768px) {
+  .heatmap-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .heatmap-container {
+    padding: 16px;
+  }
+}

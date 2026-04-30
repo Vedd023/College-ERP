@@ -173,6 +173,19 @@ const StudentsModule = (() => {
     const attPct = attendance.length ? Math.round((present / attendance.length) * 100) : 0;
     const latestFee = fees.length ? fees[fees.length - 1] : null;
 
+    // Fetch user profile to check last login
+    const userSnapshot = await db.collection('users').where('linkedId', '==', id).get();
+    const userProfile = userSnapshot.empty ? null : userSnapshot.docs[0].data();
+    
+    let isInactive = false;
+    if (userProfile && userProfile.lastLogin) {
+      const lastLoginDate = userProfile.lastLogin.toDate();
+      const diffDays = Math.floor((new Date() - lastLoginDate) / (1000 * 60 * 60 * 24));
+      if (diffDays >= 7) isInactive = true;
+    } else if (userProfile && !userProfile.lastLogin) {
+      isInactive = true; // Never logged in
+    }
+
     const profileContent = document.getElementById('profileContent');
     profileContent.innerHTML = `
       <div class="stats-grid" style="margin-bottom:16px">
@@ -192,6 +205,8 @@ const StudentsModule = (() => {
           </div>
         </div>
       </div>
+      <div id="profileHeatmap" style="margin-bottom:8px"></div>
+      ${isInactive ? `<p style="color:var(--danger); font-size:0.8rem; margin-bottom:16px; font-weight:500">Note: This user has not logged in for a long time (7+ days or never).</p>` : ''}
       <table style="width:100%;font-size:0.85rem;margin-bottom:16px">
         <tr><td style="padding:6px 0;color:var(--text-secondary)">Name</td><td style="padding:6px 0;font-weight:500">${student.name}</td></tr>
         <tr><td style="padding:6px 0;color:var(--text-secondary)">Student ID</td><td style="padding:6px 0">${student.studentId}</td></tr>
@@ -210,6 +225,17 @@ const StudentsModule = (() => {
         </div>
       ` : ''}
     `;
+
+    // Render heatmap in profile modal
+    if (typeof Heatmap !== 'undefined') {
+      Heatmap.render('profileHeatmap', isInactive ? [] : attendance, {
+        title: `${student.name.split(' ')[0]}'s Activity`,
+        weeks: 20,
+        compact: true,
+        cellSize: 12
+      });
+    }
+
     Utils.openModal('profileModal');
   }
 

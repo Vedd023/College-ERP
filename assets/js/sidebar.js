@@ -12,6 +12,7 @@ const Sidebar = (() => {
       { label: 'Courses', icon: '📚', href: 'courses.html' },
       { section: 'Academics' },
       { label: 'Attendance', icon: '📅', href: 'attendance.html' },
+      { label: 'Heatmaps', icon: '🔥', href: 'heatmaps.html' },
       { label: 'Grades', icon: '📝', href: 'grades.html' },
       { label: 'Timetable', icon: '🕐', href: 'timetable.html' },
       { label: 'Exams', icon: '📋', href: 'exams.html' },
@@ -24,6 +25,7 @@ const Sidebar = (() => {
       { label: 'Dashboard', icon: '📊', href: 'dashboard.html' },
       { section: 'Academics' },
       { label: 'Attendance', icon: '📅', href: 'attendance.html' },
+      { label: 'Heatmaps', icon: '🔥', href: 'heatmaps.html' },
       { label: 'Grades', icon: '📝', href: 'grades.html' },
       { label: 'Courses', icon: '📚', href: 'courses.html' },
       { label: 'Timetable', icon: '🕐', href: 'timetable.html' },
@@ -99,6 +101,9 @@ const Sidebar = (() => {
     if (topbarRight) {
       const theme = document.documentElement.getAttribute('data-theme') || 'light';
       topbarRight.innerHTML = `
+        <a href="privacy.html" class="btn-icon" title="Privacy Policy & Terms" style="text-decoration:none; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">
+          🛡️
+        </a>
         <button class="btn-icon" id="themeToggle" onclick="Utils.toggleDarkMode()" title="Toggle dark mode">
           ${theme === 'dark' ? '🌙' : '☀️'}
         </button>

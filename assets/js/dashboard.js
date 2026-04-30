@@ -289,6 +289,7 @@ const DashboardModule = (() => {
           <div class="stat-info"><h4>${statusBadge}</h4><p>Fee Status</p></div>
         </div>
       </div>
+      <div class="mb-2" id="dashboardHeatmap"></div>
       <div class="grid-2">
         <div class="card">
           <div class="card-header"><h3>My Grades</h3></div>
@@ -314,6 +315,15 @@ const DashboardModule = (() => {
         </div>
       </div>
     `;
+
+    // Render compact heatmap on dashboard
+    if (typeof Heatmap !== 'undefined') {
+      Heatmap.render('dashboardHeatmap', attendance, {
+        title: 'Attendance Activity',
+        weeks: 20,
+        compact: true
+      });
+    }
   }
 
   return { init };
