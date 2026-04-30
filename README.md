@@ -19,7 +19,10 @@ A full-featured, role-based **College ERP** built with vanilla HTML, CSS & JavaS
 </div>
 
 <div align="center">
-  <img src="assets/img/screenshot.png" alt="EduNexus ERP Login Page" width="100%" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+  <img src="assets/img/screenshot.png" alt="EduNexus ERP Login Page" width="100%" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px;">
+  <br/>
+  <img src="assets/img/dashboard.png" alt="EduNexus Dashboard" width="49%" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+  <img src="assets/img/menu.png" alt="EduNexus Sidebar Menu" width="49%" style="border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
 </div>
 
 ---
