@@ -18,6 +18,10 @@ A full-featured, role-based **College ERP** built with vanilla HTML, CSS & JavaS
 
 </div>
 
+<div align="center">
+  <img src="assets/img/screenshot.png" alt="EduNexus ERP Login Page" width="100%" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+</div>
+
 ---
 
 ## ✨ Features
